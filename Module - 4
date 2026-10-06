@@ -1,0 +1,488 @@
+Lab - Reading Files (External resource) 
+File: example.txt: 
+This is line 1  
+This is line 2 
+This is line 3 
+Code: 
+from pyodide.http import pyfetch 
+import pandas as pd 
+filename="https://cf-courses-data.s3.us.cloud-object
+storage.appdomain.cloud/IBMDeveloperSkillsNetwork-PY0101EN
+SkillsNetwork/labs/Module%204/data/example1.txt" 
+async def download(url, filename): 
+     response = await pyfetch(url) 
+     if response.status == 200: 
+             with open(filename, "wb") as f: 
+                     f.write(await response.bytes()) 
+await download(filename, "example1.txt") 
+print("done") 
+Output: 
+Done 
+Code: 
+example1 = "example1.txt" 
+file1 = open(example1, "r") 
+Output: 
+There is no output for this code. 
+Code: 
+file1.name 
+ 
+Output:  
+'example1.txt' 
+Code: 
+file1.mode 
+Output: 
+'r' 
+Code: 
+FileContent = file1.read() 
+FileContent 
+Output: 
+'This is line 1 \nThis is line 2\nThis is line 3' 
+Code: 
+print(FileContent) 
+Output: 
+This is line 1  
+This is line 2 
+This is line 3 
+Code: 
+type(FileContent) 
+Output: 
+str 
+Code: 
+file1.close() 
+Output: 
+No output 
+Code: 
+with open(example1, "r") as file1: 
+FileContent = file1.read() 
+print(FileContent) 
+Output: 
+This is line 1  
+This is line 2 
+This is line 3 
+Code: 
+file1.closed 
+Output: 
+True 
+Code: 
+print(FileContent) 
+Output: 
+This is line 1  
+This is line 2 
+This is line 3  
+Code: 
+with open(example1, "r") as file1: 
+print(file1.read(4)) 
+Output: 
+This 
+Code:  
+with open(example1, "r") as file1: 
+print(file1.read(4)) 
+print(file1.read(4)) 
+print(file1.read(7)) 
+print(file1.read(15)) 
+Output: 
+This 
+is  
+line 1  
+This is line 2 
+Code:  
+with open(example1, "r") as file1: 
+print(file1.read(16)) 
+print(file1.read(5)) 
+print(file1.read(9))  
+Output: 
+This is line 1  
+This  
+is line 2 
+Code:  
+with open(example1, "r") as file1: 
+print("first line: " + file1.readline()) 
+Output: 
+first line: This is line 1 
+Code: 
+with open(example1, "r") as file1: 
+print(file1.readline(20))  
+print(file1.read(20))  
+Output: 
+This is line 1  
+This is line 2 
+This 
+Code: 
+with open(example1,"r") as file1: 
+i = 0; 
+for line in file1: 
+print("Iteration", str(i), ": ", line) 
+i = i + 1  
+Output: 
+Iteration 0 :  This is line 1  
+Iteration 1 :  This is line 2 
+Iteration 2 :  This is line 3 
+Code: 
+with open(example1, "r") as file1: 
+FileasList = file1.readlines() 
+Output: 
+No output 
+Code: 
+FileasList[0] 
+Output: 
+'This is line 1 \n' 
+Code: 
+FileasList[1] 
+Output: 
+'This is line 2\n' 
+Code: 
+FileasList[2] 
+Output: 
+'This is line 3' 
+Lab - Writing Files  
+Code: 
+exmp2 = '/Example2.txt' 
+with open(exmp2, 'w') as writefile: 
+writefile.write("This is line A") 
+Output: 
+No output 
+Code: 
+with open(exmp2, 'r') as testwritefile: 
+print(testwritefile.read()) 
+Output: 
+This is line A 
+Code: 
+with open(exmp2, 'w') as writefile: 
+writefile.write("This is line A\n") 
+writefile.write("This is line B\n") 
+Output: 
+No output 
+Code: 
+with open(exmp2, 'r') as testwritefile: 
+print(testwritefile.read())  
+Output: 
+This is line A 
+This is line B 
+Code: 
+Lines = ["This is line A\n", "This is line B\n", "This is line C\n"] 
+Lines 
+Output: 
+['This is line A\n', 'This is line B\n', 'This is line C\n'] 
+Code: 
+with open('/Example2.txt', 'w') as writefile: 
+for line in Lines: 
+print(line) 
+writefile.write(line) 
+Output: 
+This is line A 
+This is line B 
+This is line C 
+Code: 
+with open('/Example2.txt', 'r') as testwritefile: 
+print(testwritefile.read()) 
+Output: 
+This is line A 
+This is line B 
+This is line C 
+Code: 
+with open('/Example2.txt', 'w') as writefile: 
+writefile.write("Overwrite\n") 
+with open('/Example2.txt', 'r') as testwritefile: 
+print(testwritefile.read()) 
+Output: 
+Overwrite 
+Code: 
+with open('/Example2.txt', 'a') as testwritefile: 
+testwritefile.write("This is line C\n") 
+testwritefile.write("This is line D\n") 
+testwritefile.write("This is line E\n") 
+Output: 
+No output 
+Code: 
+with open('/Example2.txt', 'r') as testwritefile: 
+    print(testwritefile.read()) 
+Output:  
+Overwrite 
+This is line C 
+This is line D 
+This is line E 
+Code: 
+with open('/Example2.txt', 'a+') as testwritefile: 
+    testwritefile.write("This is line E\n") 
+    print(testwritefile.read()) 
+Output:  
+No output 
+Code: 
+with open('/Example2.txt', 'a+') as testwritefile: 
+    print("Initial Location: {}".format(testwritefile.tell())) 
+    data = testwritefile.read() 
+    if (not data):                                 #empty strings return false in python 
+            print('Read nothing')  
+    else:  
+            print(testwritefile.read()) 
+    testwritefile.seek(0,0)                  # move 0 bytes from beginning. 
+    print("\nNew Location : {}".format(testwritefile.tell())) 
+    data = testwritefile.read() 
+    if (not data):  
+            print('Read nothing')  
+    else:  
+            print(data) 
+    print("Location after read: {}".format(testwritefile.tell()) ) 
+Output:  
+Initial Location: 85 
+Read nothing 
+New Location : 0 
+Overwrite 
+This is line C 
+This is line D 
+This is line E 
+This is line E 
+This is line E 
+Location after read: 85 
+Code: 
+with open('/Example2.txt', 'r+') as testwritefile: 
+    testwritefile.seek(0,0) #write at beginning of file 
+    testwritefile.write("Line 1" + "\n") 
+    testwritefile.write("Line 2" + "\n") 
+    testwritefile.write("Line 3" + "\n") 
+    testwritefile.write("Line 4" + "\n") 
+    testwritefile.write("finished\n") 
+    testwritefile.seek(0,0) 
+    print(testwritefile.read()) 
+Output:  
+Line 1 
+Line 2 
+Line 3 
+Line 4 
+finished 
+ D 
+This is line E 
+This is line E 
+This is line E 
+Code: 
+with open('/Example2.txt', 'r+') as testwritefile: 
+    testwritefile.seek(0,0) #write at beginning of file 
+    testwritefile.write("Line 1" + "\n") 
+    testwritefile.write("Line 2" + "\n") 
+    testwritefile.write("Line 3" + "\n") 
+    testwritefile.write("Line 4" + "\n") 
+    testwritefile.write("finished\n") 
+    #Uncomment the line below 
+    testwritefile.truncate() 
+    testwritefile.seek(0,0) 
+    print(testwritefile.read()) 
+Output: 
+Line 1 
+Line 2 
+Line 3 
+Line 4 
+finished 
+Code: 
+with open('/Example2.txt','r') as readfile: 
+    with open('/Example3.txt','w') as writefile: 
+          for line in readfile: 
+                writefile.write(line) 
+Output: 
+No output 
+Code: 
+with open('/Example3.txt','r') as testwritefile: 
+    print(testwritefile.read()) 
+Output: 
+Line 1 
+Line 2 
+Line 3 
+Line 4 
+finished 
+Exercise 
+Code: 
+from random import randint as rnd 
+memReg = '/members.txt' 
+exReg = '/inactive.txt' 
+fee =('yes','no') 
+def genFiles(current,old): 
+    with open(current,'w+') as writefile:  
+        writefile.write('Membership No  Date Joined  Active  \n') 
+        data = "{:^13}  {:<11}  {:<6}\n" 
+ 
+        for rowno in range(20): 
+            date = str(rnd(2015,2020))+ '-' + str(rnd(1,12))+'-'+str(rnd(1,25)) 
+            writefile.write(data.format(rnd(10000,99999),date,fee[rnd(0,1)])) 
+ with open(old,'w+') as writefile:  
+        writefile.write('Membership No  Date Joined  Active  \n') 
+        data = "{:^13}  {:<11}  {:<6}\n" 
+        for rowno in range(3): 
+            date = str(rnd(2015,2020))+ '-' + str(rnd(1,12))+'-'+str(rnd(1,25)) 
+            writefile.write(data.format(rnd(10000,99999),date,fee[1])) 
+genFiles(memReg,exReg) 
+Output: 
+No output 
+Output:  
+def testMsg(passed): 
+    if passed: 
+       return 'Test Passed' 
+    else : 
+       return 'Test Failed' 
+ 
+testWrite = "/testWrite.txt" 
+testAppend = "/testAppend.txt"  
+passed = True 
+ 
+genFiles(testWrite,testAppend) 
+ 
+with open(testWrite,'r') as file: 
+    ogWrite = file.readlines() 
+ 
+with open(testAppend,'r') as file: 
+    ogAppend = file.readlines() 
+ 
+try: 
+    cleanFiles(testWrite,testAppend) 
+except: 
+    print('Error') 
+ 
+with open(testWrite,'r') as file: 
+    clWrite = file.readlines() 
+ 
+with open(testAppend,'r') as file: 
+    clAppend = file.readlines() 
+         
+# checking if total no of rows is same, including headers 
+ 
+if (len(ogWrite) + len(ogAppend) != len(clWrite) + len(clAppend)): 
+    print("The number of rows do not add up. Make sure your final files have the same header 
+and format.") 
+    passed = False 
+     
+for line in clWrite: 
+    if  'no' in line: 
+        passed = False 
+        print("Inactive members in file") 
+        break 
+    else: 
+        if line not in ogWrite: 
+            print("Data in file does not match original file") 
+            passed = False 
+print ("{}".format(testMsg(passed))) 
+Output:     
+Inactive members in file 
+Test Failed 
+Code:  
+%pip install xlrd openpyxl 
+Output:   
+No output   
+Code:  
+import pandas as pd 
+Output:   
+No output 
+Code:  
+from pyodide.http import pyfetch 
+import pandas as pd 
+filename = "https://cf-courses-data.s3.us.cloud-object
+storage.appdomain.cloud/LXjSAttmoxJfEG6il1Bqfw/Product-sales.csv" 
+async def download(url, filename): 
+response = await pyfetch(url) 
+if response.status == 200: 
+with open(filename, "wb") as f: 
+f.write(await response.bytes()) 
+await download(filename, "Product-sales.csv") 
+df = pd.read_csv("Product-sales.csv") 
+Output: 
+No output 
+Code: 
+df.head() 
+Output: 
+Code: 
+xlsx_path = 'https://cf-courses-data.s3.us.cloud-object
+storage.appdomain.cloud/n9LOuKI9SlUa1b5zkaCMeg/Product-sales.xlsx' 
+await download(xlsx_path, "Product-sales.xlsx") 
+df = pd.read_excel("Product-sales.xlsx") 
+df.head() 
+Output: 
+Code:            
+x = df[['Quantity']] 
+x 
+Output: 
+Code: 
+x = df['Product'] 
+x 
+Output: 
+0        
+1    
+2    
+3      
+4       
+Laptop 
+Smartphone 
+Desk Chair 
+Notebook 
+Monitor 
+Name: Product, dtype: object 
+Code: 
+x = df[['Quantity']] 
+type(x) 
+Output: 
+pandas.core.frame.DataFrame 
+Code: 
+y = df[['Product','Category', 'Quantity']] 
+y 
+Output: 
+Code: 
+df.iloc[0, 0] 
+Output: 
+1 
+Code: 
+df.iloc[1,0] 
+Output: 
+2 
+Code: 
+df.iloc[0,2] 
+Output: 
+'Electronics' 
+Code: 
+df.iloc[1,2] 
+Output: 
+'Electronics' 
+Code: 
+df.loc[0, 'Product'] 
+Output: 
+'Laptop' 
+Code: 
+df.loc[1, 'Product'] 
+Output: 
+'Smartphone' 
+Code: 
+df.loc[1, 'CustomerCity'] 
+Output: 
+'Los Angeles' 
+Code: 
+df.loc[1, 'Total'] 
+Output: 
+1800 
+Code: 
+df.iloc[0:2, 0:3] 
+Output: 
+Code: 
+df.loc[0:2, 'OrderID':'Category'] 
+Output: 
+Quiz on DataFrame 
+Code: 
+q = df[['Price']] 
+q 
+Output: 
+Code: 
+q = df[['Product', 'Category']] 
+q 
+Output: 
+Code: 
+df.iloc[1, 2] 
+Output: 
+'Electronics' 
+Code: 
+df_new=df 
+df_new.index=new_index 
+df_new.loc['a', 'CustomerCity'] 
+df_new.loc['a':'d', 'CustomerCity'] 
+Output: 
+a       
+New York 
+b    Los Angeles 
+c        
+d        
+Chicago 
+Houston 
+Name: CustomerCity, dtype: object
