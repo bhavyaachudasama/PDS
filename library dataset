@@ -1,0 +1,305 @@
+# LIBRARY BOOK DATA ANALYZER
+# PDS Micro Project
+
+
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+
+# 1. LOAD DATASET
+
+file_path = "data/library_books.csv"
+
+df = pd.read_csv(file_path)
+
+print("\n========== LIBRARY BOOK DATA ANALYZER ==========\n")
+
+print("First 5 Records:")
+print(df.head())
+
+# 2. BASIC INFORMATION ABOUT DATASET
+
+print("\n========== DATASET INFORMATION ==========\n")
+
+print("Number of Rows:", df.shape[0])
+print("Number of Columns:", df.shape[1])
+
+print("\nColumn Names:")
+print(df.columns.tolist())
+
+print("\nDataset Information:")
+print(df.info())
+
+print("\nStatistical Summary:")
+print(df.describe())
+
+# 3. CHECK MISSING VALUES
+
+print("\n========== MISSING VALUE ANALYSIS ==========\n")
+
+print(df.isnull().sum())
+
+# 4. REMOVE DUPLICATE RECORDS
+
+duplicate_count = df.duplicated().sum()
+
+print("\nNumber of Duplicate Records:", duplicate_count)
+
+df = df.drop_duplicates()
+
+# 5. DATA CLEANING
+
+
+df["Publication_Year"] = pd.to_numeric(
+    df["Publication_Year"], errors="coerce"
+)
+
+df["Rating"] = pd.to_numeric(
+    df["Rating"], errors="coerce"
+)
+
+df["Available_Copies"] = pd.to_numeric(
+    df["Available_Copies"], errors="coerce"
+)
+
+df["Price"] = pd.to_numeric(
+    df["Price"], errors="coerce"
+)
+
+# Remove rows having missing important values
+df = df.dropna()
+
+print("\nDataset after cleaning:")
+print(df.head())
+
+
+# 6. BASIC LIBRARY STATISTICS
+
+
+total_books = len(df)
+total_authors = df["Author"].nunique()
+total_genres = df["Genre"].nunique()
+average_rating = df["Rating"].mean()
+total_copies = df["Available_Copies"].sum()
+average_price = df["Price"].mean()
+
+print("\n========== LIBRARY STATISTICS ==========\n")
+
+print("Total Books:", total_books)
+print("Total Authors:", total_authors)
+print("Total Genres:", total_genres)
+print("Average Rating:", round(average_rating, 2))
+print("Total Available Copies:", total_copies)
+print("Average Book Price:", round(average_price, 2))
+
+
+# 7. GENRE ANALYSIS
+
+
+print("\n========== BOOKS BY GENRE ==========\n")
+
+genre_counts = df["Genre"].value_counts()
+
+print(genre_counts)
+
+
+# 8. AUTHOR ANALYSIS
+
+
+print("\n========== TOP AUTHORS ==========\n")
+
+author_counts = df["Author"].value_counts()
+
+print(author_counts.head(10))
+
+
+# 9. HIGHEST AND LOWEST RATED BOOK
+
+
+print("\n========== RATING ANALYSIS ==========\n")
+
+highest_rated = df.loc[df["Rating"].idxmax()]
+lowest_rated = df.loc[df["Rating"].idxmin()]
+
+print("Highest Rated Book:")
+print(highest_rated)
+
+print("\nLowest Rated Book:")
+print(lowest_rated)
+
+
+# 10. MOST EXPENSIVE AND CHEAPEST BOOK
+
+
+print("\n========== PRICE ANALYSIS ==========\n")
+
+most_expensive = df.loc[df["Price"].idxmax()]
+cheapest = df.loc[df["Price"].idxmin()]
+
+print("Most Expensive Book:")
+print(most_expensive)
+
+print("\nCheapest Book:")
+print(cheapest)
+
+
+# 11. PUBLICATION YEAR ANALYSIS
+
+
+print("\n========== PUBLICATION YEAR ANALYSIS ==========\n")
+
+year_counts = df["Publication_Year"].value_counts().sort_index()
+
+print(year_counts)
+
+
+# 12. AVERAGE RATING BY GENRE
+
+
+print("\n========== AVERAGE RATING BY GENRE ==========\n")
+
+genre_rating = df.groupby("Genre")["Rating"].mean()
+
+print(genre_rating.round(2))
+
+# 13. TOTAL COPIES BY GENRE
+
+
+print("\n========== AVAILABLE COPIES BY GENRE ==========\n")
+
+copies_by_genre = df.groupby("Genre")["Available_Copies"].sum()
+
+print(copies_by_genre)
+
+
+# 14. NUMPY ANALYSIS
+
+
+print("\n========== NUMPY ANALYSIS ==========\n")
+
+ratings = df["Rating"].to_numpy()
+prices = df["Price"].to_numpy()
+
+print("Maximum Rating:", np.max(ratings))
+print("Minimum Rating:", np.min(ratings))
+print("Average Rating:", round(np.mean(ratings), 2))
+
+print("Maximum Price:", np.max(prices))
+print("Minimum Price:", np.min(prices))
+print("Average Price:", round(np.mean(prices), 2))
+
+
+
+# 15. VISUALIZATION 1 - BOOKS BY GENRE
+
+
+plt.figure(figsize=(10, 6))
+
+genre_counts.plot(kind="bar")
+
+plt.title("Number of Books by Genre")
+plt.xlabel("Genre")
+plt.ylabel("Number of Books")
+plt.xticks(rotation=45)
+plt.tight_layout()
+
+plt.show()
+
+
+# 16. VISUALIZATION 2 - BOOKS PUBLISHED BY YEAR
+
+
+plt.figure(figsize=(10, 6))
+
+plt.plot(
+    year_counts.index,
+    year_counts.values,
+    marker="o"
+)
+
+plt.title("Books Published by Year")
+plt.xlabel("Publication Year")
+plt.ylabel("Number of Books")
+
+plt.grid(True)
+plt.tight_layout()
+
+plt.show()
+
+# 17. VISUALIZATION 3 - RATING DISTRIBUTION
+
+
+plt.figure(figsize=(9, 6))
+
+sns.histplot(
+    df["Rating"],
+    bins=10,
+    kde=True
+)
+
+plt.title("Distribution of Book Ratings")
+plt.xlabel("Rating")
+plt.ylabel("Number of Books")
+
+plt.tight_layout()
+
+plt.show()
+
+
+# 18. VISUALIZATION 4 - TOP 10 AUTHORS
+
+
+top_authors = df["Author"].value_counts().head(10)
+
+plt.figure(figsize=(10, 6))
+
+top_authors.plot(kind="bar")
+
+plt.title("Top 10 Authors by Number of Books")
+plt.xlabel("Author")
+plt.ylabel("Number of Books")
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.show()
+
+
+# 19. VISUALIZATION 5 - AVERAGE RATING BY GENRE
+
+plt.figure(figsize=(10, 6))
+
+genre_rating.plot(kind="bar")
+
+plt.title("Average Rating by Genre")
+plt.xlabel("Genre")
+plt.ylabel("Average Rating")
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.show()
+
+
+# 20. VISUALIZATION 6 - AVAILABLE COPIES BY GENRE
+
+
+plt.figure(figsize=(10, 6))
+
+copies_by_genre.plot(kind="bar")
+
+plt.title("Available Copies by Genre")
+plt.xlabel("Genre")
+plt.ylabel("Available Copies")
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.show()
+
+# END OF PROGRAM
+
+
+print("\n========== ANALYSIS COMPLETED SUCCESSFULLY ==========\n")
